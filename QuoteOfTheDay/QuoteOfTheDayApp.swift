@@ -9,9 +9,17 @@ import SwiftUI
 
 @main
 struct QuoteOfTheDayApp: App {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+
+    init() {
+        NotificationManager.shared.requestPermission()
+        NotificationManager.shared.scheduleTestNotification()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

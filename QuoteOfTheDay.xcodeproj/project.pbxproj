@@ -35,16 +35,6 @@
 			path = QuoteOfTheDay;
 			sourceTree = "<group>";
 		};
-		885955E62DE1DB2900EEAF24 /* QuoteOfTheDayTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = QuoteOfTheDayTests;
-			sourceTree = "<group>";
-		};
-		885955F02DE1DB2900EEAF24 /* QuoteOfTheDayUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = QuoteOfTheDayUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				885955D72DE1DB2700EEAF24 /* QuoteOfTheDay */,
-				885955E62DE1DB2900EEAF24 /* QuoteOfTheDayTests */,
-				885955F02DE1DB2900EEAF24 /* QuoteOfTheDayUITests */,
 				885955D62DE1DB2700EEAF24 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +118,6 @@
 			dependencies = (
 				885955E52DE1DB2900EEAF24 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				885955E62DE1DB2900EEAF24 /* QuoteOfTheDayTests */,
-			);
 			name = QuoteOfTheDayTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +137,6 @@
 			);
 			dependencies = (
 				885955EF2DE1DB2900EEAF24 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				885955F02DE1DB2900EEAF24 /* QuoteOfTheDayUITests */,
 			);
 			name = QuoteOfTheDayUITests;
 			packageProductDependencies = (
