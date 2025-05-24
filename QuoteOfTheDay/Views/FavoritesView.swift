@@ -19,41 +19,48 @@ struct FavoritesView: View {
                     Text("No favorites yet.")
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(favoritesManager.favoritesByCategory.sorted(by: { $0.key < $1.key }), id: \.key) { category, quotes in
-                        Section(header: Text(category.capitalized).font(.headline)) {
-                            ForEach(quotes) { quote in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text("“\(quote.quote)”")
-                                                .font(.body)
-                                            Text("- \(quote.author)")
-                                                .font(.subheadline)
-                                                .foregroundColor(.secondary)
-                                        }
+                    let favoriteKey = favoritesManager.favoritesByCategory.keys.first { $0.lowercased() == "favorites" }
+                    let sortedCategories = (favoriteKey != nil ? [favoriteKey!] : []) +
+                        favoritesManager.favoritesByCategory.keys
+                            .filter { $0.lowercased() != "favorites" }
+                            .sorted(by: { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending })
 
-                                        Spacer()
+                    ForEach(sortedCategories, id: \.self) { category in
+                        if let quotes = favoritesManager.favoritesByCategory[category] {
+                            Section(header: Text(category.capitalized).font(.headline)) {
+                                ForEach(quotes.reversed()) { quote in
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text("“\(quote.quote)”")
+                                                    .font(.body)
+                                                Text("- \(quote.author)")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.secondary)
+                                            }
 
-                                        Menu {
-                                            ForEach(favoritesManager.favoritesByCategory.keys.sorted(), id: \.self) { category in
-                                                Button("Move to \(category)") {
-                                                    favoritesManager.remove(quote)
-                                                    favoritesManager.add(quote, to: category)
+                                            Spacer()
+
+                                            Menu {
+                                                ForEach(favoritesManager.favoritesByCategory.keys.sorted().filter { !favoritesManager.categories(for: quote).contains($0) }, id: \.self) { category in
+                                                    Button("Add to \(category)") {
+                                                        favoritesManager.add(quote, to: category)
+                                                    }
                                                 }
-                                            }
 
-                                            Button("New Category") {
-                                                showingCategoryPrompt = quote
+                                                Button("New Category") {
+                                                    showingCategoryPrompt = quote
+                                                }
+                                            } label: {
+                                                Image(systemName: "plus.circle")
+                                                    .imageScale(.large)
                                             }
-                                        } label: {
-                                            Image(systemName: "plus.circle")
-                                                .imageScale(.large)
                                         }
                                     }
                                 }
-                            }
-                            .onDelete { offsets in
-                                favoritesManager.remove(at: offsets, in: category)
+                                .onDelete { offsets in
+                                    favoritesManager.remove(at: offsets, in: category)
+                                }
                             }
                         }
                     }
@@ -70,7 +77,6 @@ struct FavoritesView: View {
                 TextField("Category name", text: $newCategoryName)
                 Button("Add") {
                     if let quote = showingCategoryPrompt {
-                        favoritesManager.remove(quote)
                         favoritesManager.add(quote, to: newCategoryName)
                         newCategoryName = ""
                         showingCategoryPrompt = nil

@@ -56,6 +56,10 @@ class FavoritesManager: ObservableObject {
         }
     }
 
+    func categories(for quote: Quote) -> [String] {
+        favoritesByCategory.filter { $0.value.contains(where: { $0.quote == quote.quote && $0.author == quote.author }) }.map { $0.key }
+    }
+
     private func saveFavorites() {
         if let encoded = try? JSONEncoder().encode(favoritesByCategory) {
             UserDefaults.standard.set(encoded, forKey: favoritesKey)
