@@ -4,7 +4,7 @@ Quote of the Day is a beautifully designed SwiftUI app that delivers daily inspi
 
 ## Features
 
-- Get a new quote every day
+- Get a new quote whenever you want
 - Save your favorite quotes
 - Switch between light and dark themes
 - Use the hamburger menu for intuitive navigation
