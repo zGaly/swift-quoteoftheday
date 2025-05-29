@@ -20,7 +20,9 @@ struct DiaryDetailView: View {
     }
 
     private func delete(reflectionID: UUID) {
-        DiaryManager.shared.deleteReflection(entryID: quote.id, reflectionID: reflectionID)
+        if let entry = DiaryManager.shared.entries.first(where: { $0.quote.quote == quote.quote && $0.quote.author == quote.author }) {
+            DiaryManager.shared.deleteReflection(entryID: entry.id, reflectionID: reflectionID)
+        }
         loadReflections()
         if reflections.isEmpty {
             dismiss()
@@ -28,7 +30,9 @@ struct DiaryDetailView: View {
     }
 
     private func update(reflectionID: UUID, newText: String) {
-        DiaryManager.shared.updateReflection(entryID: quote.id, reflectionID: reflectionID, newText: newText)
+        if let entry = DiaryManager.shared.entries.first(where: { $0.quote.quote == quote.quote && $0.quote.author == quote.author }) {
+            DiaryManager.shared.updateReflection(entryID: entry.id, reflectionID: reflectionID, newText: newText)
+        }
         loadReflections()
     }
 
@@ -59,6 +63,15 @@ struct DiaryDetailView: View {
                             .frame(minHeight: 80)
                             .padding(4)
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.2)))
+                            .toolbar {
+                                ToolbarItemGroup(placement: .keyboard) {
+                                    Spacer()
+                                    Button("Done") {
+                                        editingReflectionIDs.remove(reflection.id)
+                                        hideKeyboard()
+                                    }
+                                }
+                            }
                         } else {
                             Text(reflection.text)
                                 .padding(4)
@@ -100,3 +113,11 @@ struct DiaryDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
