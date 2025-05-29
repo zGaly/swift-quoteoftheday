@@ -1,3 +1,10 @@
+//
+// FavoritesManager.swift
+// QuoteOfTheDay
+//
+// Created by José Luís on 26/05/2025.
+//
+
 import Foundation
 
 class FavoritesManager: ObservableObject {
@@ -7,6 +14,10 @@ class FavoritesManager: ObservableObject {
         didSet {
             saveFavorites()
         }
+    }
+
+    var favorites: [Quote] {
+        favoritesByCategory.flatMap { $0.value }
     }
 
     private let favoritesKey = "favorite_quotes_by_category"
@@ -19,13 +30,20 @@ class FavoritesManager: ObservableObject {
         var updatedQuote = quote
         updatedQuote.category = category
 
+        for (existingCategory, quotes) in favoritesByCategory {
+            if let index = quotes.firstIndex(where: { $0.quote == quote.quote && $0.author == quote.author }) {
+                favoritesByCategory[existingCategory]?.remove(at: index)
+                if favoritesByCategory[existingCategory]?.isEmpty == true {
+                    favoritesByCategory.removeValue(forKey: existingCategory)
+                }
+            }
+        }
+
         if favoritesByCategory[category] == nil {
             favoritesByCategory[category] = []
         }
 
-        if !favoritesByCategory[category]!.contains(where: { $0.quote == quote.quote && $0.author == quote.author }) {
-            favoritesByCategory[category]!.append(updatedQuote)
-        }
+        favoritesByCategory[category]?.append(updatedQuote)
     }
 
     func remove(_ quote: Quote) {
@@ -57,7 +75,9 @@ class FavoritesManager: ObservableObject {
     }
 
     func categories(for quote: Quote) -> [String] {
-        favoritesByCategory.filter { $0.value.contains(where: { $0.quote == quote.quote && $0.author == quote.author }) }.map { $0.key }
+        favoritesByCategory.compactMap { (key, quotes) in
+            quotes.contains(quote) ? key : nil
+        }
     }
 
     private func saveFavorites() {
@@ -71,5 +91,24 @@ class FavoritesManager: ObservableObject {
            let decoded = try? JSONDecoder().decode([String: [Quote]].self, from: saved) {
             favoritesByCategory = decoded
         }
+    }
+    
+    func move(_ quote: Quote, to category: String) {
+        for (key, quotes) in favoritesByCategory {
+            if let index = quotes.firstIndex(of: quote) {
+                favoritesByCategory[key]?.remove(at: index)
+            }
+        }
+        add(quote, to: category)
+    }
+    
+    func removeCategory(_ category: String) {
+        favoritesByCategory.removeValue(forKey: category)
+    }
+
+    func renameCategory(_ oldName: String, to newName: String) {
+        guard oldName != newName,
+              let quotes = favoritesByCategory.removeValue(forKey: oldName) else { return }
+        favoritesByCategory[newName] = quotes
     }
 }

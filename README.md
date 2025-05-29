@@ -6,14 +6,19 @@ Quote of the Day is a beautifully designed SwiftUI app that delivers daily inspi
 
 - Get a new quote whenever you want
 - Save your favorite quotes
-- Switch between light and dark themes
-- Use the hamburger menu for intuitive navigation
+- Write personal reflections tied to favorite quotes
+- View, edit, and delete reflections
+- Group reflections by quote
+- Search reflections by reflection text or quote category
+- Use intuitive quote selector UI
+- Light and dark mode support
 - Built with MVVM for clean separation of logic and UI
 - Fetches quotes from a live API (API Ninjas)
+- Local notifications to remind users to reflect
 
 ## Architecture
 
-This app uses the MVVM (Model-View-ViewModel) architecture pattern.
+This app uses the MVVM (Model-View-ViewModel) architecture pattern with additional layers for persistent storage and UI logic isolation.
 
 - **Models**: Represent quote data
 - **Views**: Handle UI presentation
@@ -33,7 +38,9 @@ This app uses the MVVM (Model-View-ViewModel) architecture pattern.
 ```
 QuoteOfTheDay/
 ├── Models/
-│   └── Quote.swift
+│   ├── Quote.swift
+│   ├── Reflection.swift
+│   └── DiaryEntry.swift
 ├── Networking/
 │   └── QuoteService.swift
 ├── ViewModels/
@@ -42,10 +49,15 @@ QuoteOfTheDay/
 │   ├── QuoteView.swift
 │   ├── FavoritesView.swift
 │   ├── MainView.swift
-│   └── MenuView.swift
+│   ├── MenuView.swift
+│   ├── DiaryView.swift
+│   ├── DiaryDetailView.swift
+│   └── ReflectionEditorView.swift
+├── Managers/
+│   ├── FavoritesManager.swift
+│   ├── NotificationManager.swift
+│   └── DiaryManager.swift
 ├── Assets/
-├── FavoritesManager.swift
-├── NotificationManager.swift
 ├── secrets.plist
 ├── SecretsManager.swift
 └── QuoteOfTheDayApp.swift

@@ -10,6 +10,11 @@ Quote of the Day is a beautifully designed SwiftUI app that delivers daily inspi
 - Use the hamburger menu for intuitive navigation
 - Built with MVVM for clean separation of logic and UI
 - Fetches quotes from a live API (API Ninjas)
+- Write reflections for your favorite quotes
+- View all past reflections grouped by quote
+- Edit and delete individual reflections
+- Search reflections by text or category
+- View the number of reflections per quote
 
 ## Architecture
 

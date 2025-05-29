@@ -11,6 +11,8 @@ struct FavoritesView: View {
     @ObservedObject var favoritesManager = FavoritesManager.shared
     @State private var showingCategoryPrompt: Quote?
     @State private var newCategoryName: String = ""
+    @State private var showRenamePrompt = false
+    @State private var categoryToRename: String?
 
     var body: some View {
         NavigationStack {
@@ -27,7 +29,28 @@ struct FavoritesView: View {
 
                     ForEach(sortedCategories, id: \.self) { category in
                         if let quotes = favoritesManager.favoritesByCategory[category] {
-                            Section(header: Text(category.capitalized).font(.headline)) {
+                            Section(header:
+                                HStack {
+                                    Text(category.capitalized)
+                                        .font(.headline)
+                                    Spacer()
+                                    if category.lowercased() != "favorites" {
+                                        Button {
+                                            categoryToRename = category
+                                            newCategoryName = category
+                                            showRenamePrompt = true
+                                        } label: {
+                                            Image(systemName: "pencil")
+                                        }
+
+                                        Button(role: .destructive) {
+                                            favoritesManager.removeCategory(category)
+                                        } label: {
+                                            Image(systemName: "trash")
+                                        }
+                                    }
+                                }
+                            ) {
                                 ForEach(quotes.reversed()) { quote in
                                     VStack(alignment: .leading, spacing: 4) {
                                         HStack {
@@ -42,9 +65,14 @@ struct FavoritesView: View {
                                             Spacer()
 
                                             Menu {
-                                                ForEach(favoritesManager.favoritesByCategory.keys.sorted().filter { !favoritesManager.categories(for: quote).contains($0) }, id: \.self) { category in
-                                                    Button("Add to \(category)") {
-                                                        favoritesManager.add(quote, to: category)
+                                                ForEach(
+                                                    favoritesManager.favoritesByCategory.keys.sorted().filter {
+                                                        !favoritesManager.categories(for: quote).contains($0)
+                                                    },
+                                                    id: \.self
+                                                ) { category in
+                                                    Button("Move to \(category)") {
+                                                        favoritesManager.move(quote, to: category)
                                                     }
                                                 }
 
@@ -76,18 +104,39 @@ struct FavoritesView: View {
             )) {
                 TextField("Category name", text: $newCategoryName)
                 Button("Add") {
-                    if let quote = showingCategoryPrompt {
+                    if let quote = showingCategoryPrompt, !newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                         favoritesManager.add(quote, to: newCategoryName)
                         newCategoryName = ""
                         showingCategoryPrompt = nil
                     }
                 }
+                .disabled(newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 Button("Cancel", role: .cancel) {
                     showingCategoryPrompt = nil
                     newCategoryName = ""
                 }
             } message: {
                 Text("Enter a name for the new category.")
+            }
+            .alert("Rename Category", isPresented: $showRenamePrompt) {
+                TextField("New name", text: $newCategoryName)
+                Button("Save") {
+                    if let old = categoryToRename,
+                       !newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        favoritesManager.renameCategory(old, to: newCategoryName)
+                    }
+                    showRenamePrompt = false
+                    newCategoryName = ""
+                    categoryToRename = nil
+                }
+                .disabled(newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                Button("Cancel", role: .cancel) {
+                    showRenamePrompt = false
+                    newCategoryName = ""
+                    categoryToRename = nil
+                }
+            } message: {
+                Text("Enter the new name for this category.")
             }
         }
     }

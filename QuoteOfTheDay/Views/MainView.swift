@@ -12,6 +12,7 @@ struct MainView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @Environment(\.colorScheme) var colorScheme
     @State private var navigateToFavorites = false
+    @State private var navigateToDiary = false
     
     var body: some View {
         NavigationStack {
@@ -20,6 +21,9 @@ struct MainView: View {
 
                 .navigationDestination(isPresented: $navigateToFavorites) {
                     FavoritesView()
+                }
+                .navigationDestination(isPresented: $navigateToDiary) {
+                    DiaryView()
                 }
 
                 if showMenu {
@@ -54,6 +58,7 @@ struct MainView: View {
                                     .foregroundColor(.primary)
                                     .padding(.horizontal)
                             }
+                            .padding(.top, 12)
 
                             Button {
                                 isDarkMode.toggle()
@@ -64,9 +69,19 @@ struct MainView: View {
                             }
                             .padding(.top, 12)
 
+                            Button {
+                                navigateToDiary = true
+                                showMenu = false
+                            } label: {
+                                Label("Diary", systemImage: "book.fill")
+                                    .foregroundColor(.primary)
+                                    .padding(.horizontal)
+                            }
+                            .padding(.top, 12)
+
                             Spacer()
                         }
-                        .frame(width: 260, height: .infinity)
+                        .frame(width: 260)
                         .background(
                             colorScheme == .dark ? Color.black.opacity(0.95) : Color.white.opacity(0.95)
                         )
@@ -81,7 +96,7 @@ struct MainView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Quote of the Day")
+                    Text("Quote")
                         .font(.headline)
                         .bold(true)
                 }

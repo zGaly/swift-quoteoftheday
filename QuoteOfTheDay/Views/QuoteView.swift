@@ -1,3 +1,10 @@
+//
+// QuoteView.swift
+// QuoteOfTheDay
+//
+// Created by José Luís on 26/05/2025.
+//
+
 import SwiftUI
 
 struct QuoteView: View {
