@@ -44,7 +44,9 @@ struct FavoritesView: View {
                                         }
 
                                         Button(role: .destructive) {
-                                            favoritesManager.removeCategory(category)
+                                            withAnimation {
+                                                favoritesManager.removeCategory(category)
+                                            }
                                         } label: {
                                             Image(systemName: "trash")
                                         }
@@ -72,12 +74,16 @@ struct FavoritesView: View {
                                                     id: \.self
                                                 ) { category in
                                                     Button("Move to \(category)") {
-                                                        favoritesManager.move(quote, to: category)
+                                                        withAnimation {
+                                                            favoritesManager.move(quote, to: category)
+                                                        }
                                                     }
                                                 }
 
                                                 Button("New Category") {
-                                                    showingCategoryPrompt = quote
+                                                    withAnimation {
+                                                        showingCategoryPrompt = quote
+                                                    }
                                                 }
                                             } label: {
                                                 Image(systemName: "plus.circle")
@@ -87,7 +93,9 @@ struct FavoritesView: View {
                                     }
                                 }
                                 .onDelete { offsets in
-                                    favoritesManager.remove(at: offsets, in: category)
+                                    withAnimation {
+                                        favoritesManager.remove(at: offsets, in: category)
+                                    }
                                 }
                             }
                         }
@@ -105,7 +113,9 @@ struct FavoritesView: View {
                 TextField("Category name", text: $newCategoryName)
                 Button("Add") {
                     if let quote = showingCategoryPrompt, !newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        favoritesManager.add(quote, to: newCategoryName)
+                        withAnimation {
+                            favoritesManager.add(quote, to: newCategoryName)
+                        }
                         newCategoryName = ""
                         showingCategoryPrompt = nil
                     }
@@ -123,7 +133,9 @@ struct FavoritesView: View {
                 Button("Save") {
                     if let old = categoryToRename,
                        !newCategoryName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        favoritesManager.renameCategory(old, to: newCategoryName)
+                        withAnimation {
+                            favoritesManager.renameCategory(old, to: newCategoryName)
+                        }
                     }
                     showRenamePrompt = false
                     newCategoryName = ""

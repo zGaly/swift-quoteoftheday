@@ -23,9 +23,11 @@ struct DiaryDetailView: View {
         if let entry = DiaryManager.shared.entries.first(where: { $0.quote.quote == quote.quote && $0.quote.author == quote.author }) {
             DiaryManager.shared.deleteReflection(entryID: entry.id, reflectionID: reflectionID)
         }
-        loadReflections()
-        if reflections.isEmpty {
-            dismiss()
+        withAnimation {
+            loadReflections()
+            if reflections.isEmpty {
+                dismiss()
+            }
         }
     }
 
@@ -33,7 +35,9 @@ struct DiaryDetailView: View {
         if let entry = DiaryManager.shared.entries.first(where: { $0.quote.quote == quote.quote && $0.quote.author == quote.author }) {
             DiaryManager.shared.updateReflection(entryID: entry.id, reflectionID: reflectionID, newText: newText)
         }
-        loadReflections()
+        withAnimation {
+            reflections = DiaryManager.shared.getReflections(for: quote)
+        }
     }
 
     var body: some View {
@@ -91,10 +95,12 @@ struct DiaryDetailView: View {
                             }
 
                             Button {
-                                if editingReflectionIDs.contains(reflection.id) {
-                                    editingReflectionIDs.remove(reflection.id)
-                                } else {
-                                    editingReflectionIDs.insert(reflection.id)
+                                withAnimation {
+                                    if editingReflectionIDs.contains(reflection.id) {
+                                        editingReflectionIDs.remove(reflection.id)
+                                    } else {
+                                        editingReflectionIDs.insert(reflection.id)
+                                    }
                                 }
                             } label: {
                                 Label(editingReflectionIDs.contains(reflection.id) ? "Save" : "Edit", systemImage: editingReflectionIDs.contains(reflection.id) ? "checkmark" : "pencil")

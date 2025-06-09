@@ -25,7 +25,9 @@ struct MenuView: View {
             }
 
             Button(action: {
-                showMenu = false
+                withAnimation {
+                    showMenu = false
+                }
             }) {
                 HStack {
                     Image(systemName: "moon.fill")

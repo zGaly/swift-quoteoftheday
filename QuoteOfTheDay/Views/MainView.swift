@@ -51,8 +51,10 @@ struct MainView: View {
                             }
 
                             Button {
-                                navigateToFavorites = true
-                                showMenu = false
+                                withAnimation {
+                                    navigateToFavorites = true
+                                    showMenu = false
+                                }
                             } label: {
                                 Label("Favorites", systemImage: "heart.fill")
                                     .foregroundColor(.primary)
@@ -61,7 +63,9 @@ struct MainView: View {
                             .padding(.top, 12)
 
                             Button {
-                                isDarkMode.toggle()
+                                withAnimation {
+                                    isDarkMode.toggle()
+                                }
                             } label: {
                                 Label("Dark Mode", systemImage: "moon.fill")
                                     .foregroundColor(.primary)
@@ -70,8 +74,10 @@ struct MainView: View {
                             .padding(.top, 12)
 
                             Button {
-                                navigateToDiary = true
-                                showMenu = false
+                                withAnimation {
+                                    navigateToDiary = true
+                                    showMenu = false
+                                }
                             } label: {
                                 Label("Diary", systemImage: "book.fill")
                                     .foregroundColor(.primary)

@@ -16,13 +16,17 @@ struct QuoteView: View {
             Spacer()
 
             if viewModel.isLoading {
-                ProgressView("Loading...")
+                withAnimation {
+                    ProgressView("Loading...")
+                }
             } else if let quote = viewModel.quote {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Spacer()
                         Button(action: {
-                            toggleFavorite(quote)
+                            withAnimation {
+                                toggleFavorite(quote)
+                            }
                         }) {
                             Image(systemName: favoritesManager.contains(quote) ? "heart.fill" : "heart")
                                 .foregroundColor(favoritesManager.contains(quote) ? .red : .gray)
@@ -55,7 +59,9 @@ struct QuoteView: View {
             Spacer()
 
             Button("New Quote") {
-                viewModel.fetchQuote()
+                withAnimation {
+                    viewModel.fetchQuote()
+                }
             }
             .padding()
             .frame(maxWidth: .infinity)
@@ -70,10 +76,12 @@ struct QuoteView: View {
     }
 
     private func toggleFavorite(_ quote: Quote) {
-        if favoritesManager.contains(quote) {
-            favoritesManager.remove(quote)
-        } else {
-            favoritesManager.add(quote, to: "favorites")
+        withAnimation {
+            if favoritesManager.contains(quote) {
+                favoritesManager.remove(quote)
+            } else {
+                favoritesManager.add(quote, to: "favorites")
+            }
         }
     }
 }

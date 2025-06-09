@@ -30,37 +30,47 @@ struct ReflectionEditorView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            if isEditing {
-                TextEditor(text: $editedText)
-                    .frame(minHeight: 80)
-                    .padding(4)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.2)))
-            } else {
-                Text(reflection.text)
-                    .padding(4)
-            }
-
-            Text(reflection.date.formatted(date: .long, time: .shortened))
-                .font(.caption)
-                .foregroundColor(.gray)
-
-            HStack {
-                Spacer()
-                Button(role: .destructive) {
-                    onDelete()
-                } label: {
-                    Label("Delete", systemImage: "trash")
-                        .font(.caption)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                if isEditing {
+                    TextEditor(text: $editedText)
+                        .frame(minHeight: 80)
+                        .padding(4)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.2)))
+                } else {
+                    Text(reflection.text)
+                        .padding(4)
                 }
 
-                Button(action: handleEditOrSave) {
-                    Label(isEditing ? "Save" : "Edit", systemImage: isEditing ? "checkmark" : "pencil")
-                        .font(.caption)
-                }
-            }
+                Text(reflection.date.formatted(date: .long, time: .shortened))
+                    .font(.caption)
+                    .foregroundColor(.gray)
 
-            Divider()
+                HStack {
+                    Spacer()
+                    Button(role: .destructive) {
+                        onDelete()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                            .font(.caption)
+                    }
+
+                    Button(action: handleEditOrSave) {
+                        Label(isEditing ? "Save" : "Edit", systemImage: isEditing ? "checkmark" : "pencil")
+                            .font(.caption)
+                    }
+                }
+
+                Divider()
+            }
+            .onTapGesture {
+                dismissKeyboard()
+            }
+            .padding()
         }
+    }
+
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

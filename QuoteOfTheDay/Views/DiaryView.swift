@@ -77,16 +77,18 @@ struct DiaryView: View {
                         .font(.system(.title3, design: .rounded).bold())
                         .foregroundColor(.primary)
 
-                    TextEditor(text: $reflectionText)
-                        .frame(height: 200)
-                        .padding(8)
-                        .background(Color(.systemBackground))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                        )
-                        .shadow(radius: 2)
+                    withAnimation {
+                        TextEditor(text: $reflectionText)
+                            .frame(height: 200)
+                            .padding(8)
+                            .background(Color(.systemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                            )
+                            .shadow(radius: 2)
+                    }
 
                     // Save Button
                     Button(action: saveReflection) {
@@ -99,6 +101,7 @@ struct DiaryView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .font(.system(.body, design: .rounded).bold())
                     }
+                    .animation(.easeInOut, value: reflectionText)
                     .disabled(currentQuote == nil || reflectionText.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
                 .padding()

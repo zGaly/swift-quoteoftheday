@@ -24,14 +24,24 @@ struct QuoteDetailView: View {
             Text("Your Note:")
                 .font(.headline)
 
-            TextEditor(text: $personalNote)
-                .frame(height: 150)
-                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
-
-            Button("Save Note") {
-                saveNote()
+            withAnimation {
+                TextEditor(text: $personalNote)
+                    .frame(height: 150)
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.gray.opacity(0.3)))
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .animation(.easeInOut, value: personalNote)
             }
-            .padding(.top)
+
+            withAnimation {
+                Button("Save Note") {
+                    withAnimation {
+                        saveNote()
+                    }
+                }
+                .padding(.top)
+                .transition(.opacity.combined(with: .move(edge: .bottom)))
+                .animation(.easeInOut, value: personalNote)
+            }
 
             Spacer()
         }
